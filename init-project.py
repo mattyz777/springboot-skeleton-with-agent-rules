@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
 """
-Scaffold a new Spring Boot 3 project from the springboot3-skeleton template.
+Scaffold a new Spring Boot 3 project and/or copy agent rules.
 
 Usage:
-    python init-project.py <package_name> <target_path>
+    python init-project.py -i <package_name> <target_path>
+    python init-project.py -a <target_path>
 
-Example:
-    python init-project.py com.aaa.bbb C:/code/projects/order-service
+Options:
+    -i  Init a new project from skeleton template
+    -a  Copy AGENTS.md and agent-rules docs to target project
 
-This will:
-  1. Copy the skeleton to <target_path> (creates parent dirs if needed)
-  2. Replace groupId/artifactId in pom.xml
-  3. Rename Java package directory from com/matt to match the new package
-  4. Update package declarations and imports in all .java files
+Examples:
+    # Create a new project
+    python init-project.py -i com.company.orderservice C:/code/projects/order-service
+
+    # Add agent rules to an existing project
+    python init-project.py -a C:/code/projects/order-service
+
+    # Both (init then add agent rules)
+    python init-project.py -i com.company.orderservice C:/code/projects/order-service
+    python init-project.py -a C:/code/projects/order-service
 """
 
 import sys
@@ -23,6 +30,7 @@ from pathlib import Path
 
 # --- Configuration ---
 SKELETON_DIR = "springboot3-skeleton"
+AGENT_RULES_DIR = "agent-rules"
 TEMPLATE_GROUP_ID = "com.matt"
 TEMPLATE_PACKAGE_PATH = "com/matt"
 
@@ -99,15 +107,8 @@ def update_java_files(target_path: Path, old_package: str, new_package: str) -> 
     print(f"  Updated package/import in {count} Java files")
 
 
-def main():
-    if len(sys.argv) != 3:
-        print("Usage: python init-project.py <package_name> <target_path>")
-        print("Example: python init-project.py com.aaa.bbb C:/code/projects/order-service")
-        sys.exit(1)
-
-    package_name = sys.argv[1]
-    target_path = Path(sys.argv[2]).resolve()
-
+def init_project(package_name: str, target_path: Path, script_dir: Path) -> None:
+    """Init a new project from skeleton template."""
     # Validate package name
     if not validate_package_name(package_name):
         print(f"Error: Invalid package name '{package_name}'")
@@ -116,11 +117,10 @@ def main():
 
     # Derive values
     group_id = package_name
-    artifact_id = target_path.name  # use folder name as artifactId
+    artifact_id = target_path.name
     new_package_path = package_name.replace(".", "/")
 
     # Skeleton source
-    script_dir = Path(__file__).resolve().parent
     skeleton_path = script_dir / SKELETON_DIR
 
     if not skeleton_path.exists():
@@ -147,7 +147,82 @@ def main():
     update_java_files(target_path, TEMPLATE_GROUP_ID, package_name)
 
     print(f"\n[OK] Project '{artifact_id}' created at {target_path}")
-    print(f"  cd {target_path} && mvn spring-boot:run")
+
+
+def add_agent_rules(target_path: Path, script_dir: Path) -> None:
+    """Copy AGENTS.md and agent-rules docs to the target project root."""
+    agent_rules_src = script_dir / AGENT_RULES_DIR
+
+    if not agent_rules_src.exists():
+        print(f"Error: Agent rules directory not found at {agent_rules_src}")
+        sys.exit(1)
+
+    if not target_path.exists():
+        print(f"Error: Target path does not exist: {target_path}")
+        sys.exit(1)
+
+    print(f"\nAdding agent rules to: {target_path}")
+
+    # Copy AGENTS.md to project root
+    agents_md_src = agent_rules_src / "AGENTS.md"
+    agents_md_dst = target_path / "AGENTS.md"
+    shutil.copy2(str(agents_md_src), str(agents_md_dst))
+    print(f"  Copied AGENTS.md")
+
+    # Copy docs/agents/ directory
+    docs_src = agent_rules_src / "docs" / "agents"
+    docs_dst = target_path / "docs" / "agents"
+    if docs_dst.exists():
+        shutil.rmtree(str(docs_dst))
+    docs_dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copytree(str(docs_src), str(docs_dst))
+    print(f"  Copied docs/agents/ ({len(list(docs_dst.iterdir()))} files)")
+
+    print(f"\n[OK] Agent rules added to {target_path}")
+
+
+def print_usage():
+    print("Usage:")
+    print("  python init-project.py -i <package_name> <target_path>")
+    print("  python init-project.py -a <target_path>")
+    print()
+    print("Options:")
+    print("  -i  Init a new project from skeleton template")
+    print("  -a  Copy AGENTS.md and agent-rules docs to target project")
+    print()
+    print("Examples:")
+    print("  python init-project.py -i com.company.app C:/code/projects/my-app")
+    print("  python init-project.py -a C:/code/projects/my-app")
+
+
+def main():
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(1)
+
+    script_dir = Path(__file__).resolve().parent
+    mode = sys.argv[1]
+
+    if mode == "-i":
+        if len(sys.argv) != 4:
+            print("Usage: python init-project.py -i <package_name> <target_path>")
+            sys.exit(1)
+        package_name = sys.argv[2]
+        target_path = Path(sys.argv[3]).resolve()
+        init_project(package_name, target_path, script_dir)
+
+    elif mode == "-a":
+        if len(sys.argv) != 3:
+            print("Usage: python init-project.py -a <target_path>")
+            sys.exit(1)
+        target_path = Path(sys.argv[2]).resolve()
+        add_agent_rules(target_path, script_dir)
+
+    else:
+        print(f"Error: Unknown option '{mode}'")
+        print()
+        print_usage()
+        sys.exit(1)
 
 
 if __name__ == "__main__":
