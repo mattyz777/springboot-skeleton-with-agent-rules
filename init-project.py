@@ -169,6 +169,12 @@ def add_agent_rules(target_path: Path, script_dir: Path) -> None:
     shutil.copy2(str(agents_md_src), str(agents_md_dst))
     print(f"  Copied AGENTS.md")
 
+    # Copy CLAUDE.md to project root
+    claude_md_src = agent_rules_src / "CLAUDE.md"
+    claude_md_dst = target_path / "CLAUDE.md"
+    shutil.copy2(str(claude_md_src), str(claude_md_dst))
+    print(f"  Copied CLAUDE.md")
+
     # Copy docs/agents/ directory
     docs_src = agent_rules_src / "docs" / "agents"
     docs_dst = target_path / "docs" / "agents"
