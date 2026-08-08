@@ -1,36 +1,22 @@
-package com.matt.config;
+package com.matt.filter;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.MDC;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * Filter to add trace ID to MDC for request tracing.
- * The trace ID is extracted from the request header if present,
- * otherwise a new UUID is generated.
- */
-@Component
-@Order(1)
+
 public class TraceIdFilter implements Filter {
 
     private static final String TRACE_ID_HEADER = "X-Trace-Id";
     private static final String TRACE_ID_MDC_KEY = "traceId";
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // No initialization needed
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -49,10 +35,5 @@ public class TraceIdFilter implements Filter {
         } finally {
             MDC.remove(TRACE_ID_MDC_KEY);
         }
-    }
-
-    @Override
-    public void destroy() {
-        // No cleanup needed
     }
 }
