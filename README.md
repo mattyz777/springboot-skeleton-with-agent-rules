@@ -38,10 +38,10 @@ What it does:
 3. Renames the Java package directory structure to match the new package
 4. Replaces all `package` and `import` declarations in `.java` files
 
-| Parameter | Description | Example |
-|-----------|-------------|---------|
-| `package_name` | Java package name (lowercase, dot-separated, at least two segments) | `com.company.app` |
-| `target_path` | Full path for the new project (must not already exist) | `C:\code\my-app` |
+| Parameter      | Description                                            | Example           |
+|----------------|--------------------------------------------------------|-------------------|
+| `package_name` | Java package name                                      | `com.company.app` |
+| `target_path`  | Full path for the new project (must not already exist) | `C:\code\my-app`  |
 
 ### Add Agent Rules (`-a`)
 

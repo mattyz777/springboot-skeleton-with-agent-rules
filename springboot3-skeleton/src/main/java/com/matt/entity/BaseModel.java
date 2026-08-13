@@ -40,14 +40,14 @@ public abstract class BaseModel {
     private Long updatedBy;
 
     /**
-     * Creation timestamp (milliseconds)
+     * Creation timestamp
      */
     @TableField("created_at")
-    private Long createdAt;
+    private LocalDateTime createdAt;
 
     /**
-     * Last update timestamp (milliseconds)
+     * Last update timestamp
      */
     @TableField("updated_at")
-    private Long updatedAt;
+    private LocalDateTime updatedAt;
 }

@@ -6,7 +6,7 @@ The filenames below are ILLUSTRATIVE EXAMPLES showing naming and placement.
 Do NOT create them. Use them to decide where a new file belongs.
 
 ```text
-src/main/java/com/matt/demo/
+src/main/java/com/matt/
 ├── Application.java              # single @SpringBootApplication entry point
 ├── controller/                   # UserController.java
 ├── service/                      # UserService.java          (interface)
@@ -41,7 +41,7 @@ src/main/resources/
 ├── application-prod.yml
 └── logback-spring.xml
 
-src/test/java/com/matt/demo/       # mirrors the main package tree
+src/test/java/com/matt/           # mirrors the main package tree
 ```
 
 ## Load these on demand
