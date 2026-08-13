@@ -11,6 +11,7 @@
     <properties>
         <lombok.version>1.18.46</lombok.version>
         <mybatis.version>3.5.17</mybatis.version>
+        <mysql.version>9.7.0</mysql.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,16 +37,19 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
-            <scope>compile</scope>
         </dependency>
         <!-- database -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
             <version>${mybatis.version}</version>
-            <scope>compile</scope>
         </dependency>
-        <!-- paging -->
+        <!-- database paging -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-jsqlparser</artifactId>

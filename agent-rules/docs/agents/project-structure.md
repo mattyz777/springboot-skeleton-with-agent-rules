@@ -6,7 +6,7 @@ The filenames below are ILLUSTRATIVE EXAMPLES showing naming and placement.
 Do NOT create them. Use them to decide where a new file belongs.
 
 ```text
-src/main/java/com/hpx/demo/
+src/main/java/com/matt/demo/
 ├── Application.java              # single @SpringBootApplication entry point
 ├── controller/                   # UserController.java
 ├── service/                      # UserService.java          (interface)
@@ -15,8 +15,8 @@ src/main/java/com/hpx/demo/
 ├── entity/                       # User.java                 (DB table mapping)
 ├── enums/                        # OrderStatusEnum.java
 ├── dto/
-│   ├── request/                  # UserCreateRequest.java, UserUpdateRequest.java
-│   └── response/                 # UserResponse.java, UserListResponse.java
+│   ├── request/                  # PagingRequest.java, UserCreateRequest.java, UserUpdateRequest.java
+│   └── response/                 # PagingResponse.java, UserResponse.java, UserListResponse.java
 ├── bo/                           # OrderBo.java              (business object)
 ├── converter/                    # UserConverter.java
 ├── validator/                    # PhoneValidator.java       (impl of @Phone)
@@ -27,14 +27,12 @@ src/main/java/com/hpx/demo/
 ├── config/                       # WebMvcConfig.java
 ├── handler/                      # GlobalExceptionHandler.java
 ├── interceptor/                  # DecryptInterceptor.java
-├── filter/                       # XssFilter.java, RepeatableFilter.java
+├── filter/                       # XssFilter.java, TraceIdFilter.java
 ├── annotation/                   # Phone.java, DistributedLock.java
 ├── aspect/                       # DistributedLockAspect.java
-└── common/                       # business-agnostic only
-    ├── response/                 # CommonResponse.java, PageResponse.java
-    ├── exception/                # BusinessException.java
-    ├── constant/                 # ErrorCode.java
-    └── util/                     # DatetimeUtil.java
+├── constant/                     # Constant.java, ErrorCode.java
+├── exception/                    # BusinessException.java
+└── utils/                        # DatetimeUtil.java
 
 src/main/resources/
 ├── mapper/                       # UserMapper.xml  (mirrors mapper/ package)
@@ -43,7 +41,7 @@ src/main/resources/
 ├── application-prod.yml
 └── logback-spring.xml
 
-src/test/java/com/hpx/demo/       # mirrors the main package tree
+src/test/java/com/matt/demo/       # mirrors the main package tree
 ```
 
 ## Load these on demand
@@ -65,7 +63,7 @@ src/test/java/com/hpx/demo/       # mirrors the main package tree
 |-------------------|------------------------------------------------|-------------------------|
 | Controller        | `*Controller`                                  | `UserController`        |
 | Service interface | `*Service`                                     | `UserService`           |
-| Service impl      | `*ServiceImpl` in `service.impl`               | `UserServiceImpl`       |
+| Service impl      | `*ServiceImpl`                                 | `UserServiceImpl`       |
 | Mapper            | `*Mapper`                                      | `UserMapper`            |
 | Mapper XML        | `resources/mapper/*Mapper.xml`, same base name | `UserMapper.xml`        |
 | Entity            | Singular noun, matches table                   | `User`                  |
