@@ -48,13 +48,15 @@ What it does:
 Copies `AGENTS.md` and `docs/agents/` to an existing project for AI-assisted development.
 
 ```bash
-python init-project.py -a C:\code\projects\order-service
+python init-project.py -a -p com.company.orderservice C:\code\projects\order-service
 ```
 
 What it does:
 
 1. Copies `AGENTS.md` to the target project root
-2. Copies `docs/agents/` directory (coding conventions and style guides) to the target project
+2. Copies `CLAUDE.md` to the target project root (for Claude Code compatibility)
+3. Copies `docs/agents/` directory (coding conventions and style guides) to the target project
+4. Updates package references in all agent files from `com.matt` to your package name
 
 The target project must already exist.
 
@@ -65,5 +67,5 @@ The target project must already exist.
 python init-project.py -i com.company.orderservice C:\code\projects\order-service
 
 # Step 2: Add agent rules
-python init-project.py -a C:\code\projects\order-service
+python init-project.py -a -p com.company.orderservice C:\code\projects\order-service
 ```

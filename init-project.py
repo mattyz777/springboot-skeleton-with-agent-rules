@@ -4,22 +4,23 @@ Scaffold a new Spring Boot 3 project and/or copy agent rules.
 
 Usage:
     python init-project.py -i <package_name> <target_path>
-    python init-project.py -a <target_path>
+    python init-project.py -a -p <package_name> <target_path>
 
 Options:
     -i  Init a new project from skeleton template
     -a  Copy AGENTS.md and agent-rules docs to target project
+    -p  Package name for agent rules (required with -a)
 
 Examples:
     # Create a new project
     python init-project.py -i com.company.orderservice C:/code/projects/order-service
 
     # Add agent rules to an existing project
-    python init-project.py -a C:/code/projects/order-service
+    python init-project.py -a -p com.company.orderservice C:/code/projects/order-service
 
     # Both (init then add agent rules)
     python init-project.py -i com.company.orderservice C:/code/projects/order-service
-    python init-project.py -a C:/code/projects/order-service
+    python init-project.py -a -p com.company.orderservice C:/code/projects/order-service
 """
 
 import sys
@@ -149,7 +150,7 @@ def init_project(package_name: str, target_path: Path, script_dir: Path) -> None
     print(f"\n[OK] Project '{artifact_id}' created at {target_path}")
 
 
-def add_agent_rules(target_path: Path, script_dir: Path) -> None:
+def add_agent_rules(target_path: Path, package_name: str, script_dir: Path) -> None:
     """Copy AGENTS.md and agent-rules docs to the target project root."""
     agent_rules_src = script_dir / AGENT_RULES_DIR
 
@@ -184,21 +185,37 @@ def add_agent_rules(target_path: Path, script_dir: Path) -> None:
     shutil.copytree(str(docs_src), str(docs_dst))
     print(f"  Copied docs/agents/ ({len(list(docs_dst.iterdir()))} files)")
 
+    # Update package name in agent files
+    replacements = [
+        (TEMPLATE_GROUP_ID, package_name),
+        ("com/matt", package_name.replace(".", "/")),
+    ]
+    
+    # Update AGENTS.md, CLAUDE.md, and all docs/agents/*.md files
+    for md_file in [agents_md_dst, claude_md_dst]:
+        replace_in_file(md_file, replacements)
+        print(f"  Updated package in {md_file.name}")
+    
+    for md_file in docs_dst.glob("*.md"):
+        replace_in_file(md_file, replacements)
+    print(f"  Updated package in docs/agents/*.md")
+
     print(f"\n[OK] Agent rules added to {target_path}")
 
 
 def print_usage():
     print("Usage:")
     print("  python init-project.py -i <package_name> <target_path>")
-    print("  python init-project.py -a <target_path>")
+    print("  python init-project.py -a -p <package_name> <target_path>")
     print()
     print("Options:")
     print("  -i  Init a new project from skeleton template")
     print("  -a  Copy AGENTS.md and agent-rules docs to target project")
+    print("  -p  Package name for agent rules (required with -a)")
     print()
     print("Examples:")
     print("  python init-project.py -i com.company.app C:/code/projects/my-app")
-    print("  python init-project.py -a C:/code/projects/my-app")
+    print("  python init-project.py -a -p com.company.app C:/code/projects/my-app")
 
 
 def main():
@@ -218,11 +235,13 @@ def main():
         init_project(package_name, target_path, script_dir)
 
     elif mode == "-a":
-        if len(sys.argv) != 3:
-            print("Usage: python init-project.py -a <target_path>")
+        # Parse -a -p <package_name> <target_path>
+        if len(sys.argv) < 5 or sys.argv[2] != "-p":
+            print("Usage: python init-project.py -a -p <package_name> <target_path>")
             sys.exit(1)
-        target_path = Path(sys.argv[2]).resolve()
-        add_agent_rules(target_path, script_dir)
+        package_name = sys.argv[3]
+        target_path = Path(sys.argv[4]).resolve()
+        add_agent_rules(target_path, package_name, script_dir)
 
     else:
         print(f"Error: Unknown option '{mode}'")

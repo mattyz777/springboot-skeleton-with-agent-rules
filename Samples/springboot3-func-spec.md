@@ -285,14 +285,6 @@ The task is completed when:
 * DTO and Entity boundaries are respected.
 * Validation rules are implemented.
 
-## Build
-
-The project passes:
-
-```bash
-./mvnw verify
-```
-
 ---
 
 # Out of Scope
