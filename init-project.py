@@ -36,7 +36,7 @@ TEMPLATE_GROUP_ID = "com.matt"
 TEMPLATE_PACKAGE_PATH = "com/matt"
 
 # Directories to skip when copying
-SKIP_DIRS = {".idea", "target", ".git"}
+SKIP_DIRS = {".idea", "build", ".gradle", ".git"}
 
 
 def validate_package_name(package_name: str) -> bool:
@@ -45,7 +45,7 @@ def validate_package_name(package_name: str) -> bool:
 
 
 def copy_skeleton(skeleton_path: Path, target_path: Path) -> None:
-    """Copy skeleton to target, skipping .idea/target/.git."""
+    """Copy skeleton to target, skipping .idea/build/.gradle/.git."""
     def ignore(directory, contents):
         return [c for c in contents if c in SKIP_DIRS]
 
@@ -63,15 +63,19 @@ def replace_in_file(file_path: Path, replacements: list[tuple[str, str]]) -> Non
         file_path.write_text(content, encoding="utf-8")
 
 
-def update_pom(target_path: Path, group_id: str, artifact_id: str) -> None:
-    """Update groupId and artifactId in pom.xml."""
-    pom = target_path / "pom.xml"
-    replacements = [
-        (f"<groupId>{TEMPLATE_GROUP_ID}</groupId>", f"<groupId>{group_id}</groupId>"),
-        (f"<artifactId>{SKELETON_DIR}</artifactId>", f"<artifactId>{artifact_id}</artifactId>"),
-    ]
-    replace_in_file(pom, replacements)
-    print(f"  Updated pom.xml: groupId={group_id}, artifactId={artifact_id}")
+def update_gradle(target_path: Path, group_id: str, artifact_id: str) -> None:
+    """Update group in build.gradle and rootProject.name in settings.gradle."""
+    build_gradle = target_path / "build.gradle"
+    settings_gradle = target_path / "settings.gradle"
+
+    replace_in_file(build_gradle, [
+        (f"group = '{TEMPLATE_GROUP_ID}'", f"group = '{group_id}'"),
+    ])
+    replace_in_file(settings_gradle, [
+        (f"rootProject.name = '{SKELETON_DIR}'", f"rootProject.name = '{artifact_id}'"),
+    ])
+    print(f"  Updated build.gradle: group={group_id}")
+    print(f"  Updated settings.gradle: rootProject.name={artifact_id}")
 
 
 def rename_package_dirs(target_path: Path, new_package_path: str) -> None:
@@ -143,7 +147,7 @@ def init_project(package_name: str, target_path: Path, script_dir: Path) -> None
 
     # Execute
     copy_skeleton(skeleton_path, target_path)
-    update_pom(target_path, group_id, artifact_id)
+    update_gradle(target_path, group_id, artifact_id)
     rename_package_dirs(target_path, new_package_path)
     update_java_files(target_path, TEMPLATE_GROUP_ID, package_name)
 

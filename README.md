@@ -8,7 +8,7 @@ A Spring Boot 3 project skeleton with agent rules for AI-assisted development. U
 
 - Python 3.9+
 - Java 21
-- Maven
+- Gradle (optional — the skeleton ships with the Gradle wrapper `./gradlew`)
 
 ### Usage
 
@@ -34,7 +34,7 @@ python init-project.py -i com.company.orderservice /Users/dev/projects/order-ser
 What it does:
 
 1. Copies the `springboot3-skeleton` template to the target path (creates parent directories if needed)
-2. Updates `pom.xml` with the new `groupId` and `artifactId` (folder name)
+2. Updates `build.gradle` (`group`) and `settings.gradle` (`rootProject.name`, set to the folder name)
 3. Renames the Java package directory structure to match the new package
 4. Replaces all `package` and `import` declarations in `.java` files
 

@@ -4,11 +4,11 @@
 
 Spring Boot 3.5 / Java 21 service.
 Base package: `com.matt.<business>`.
-Single-module Maven.
+Single-module Gradle.
 
 Commands:
-- Build: `mvn verify`
-- Test: `mvn test`
+- Build: `./gradlew build`
+- Test: `./gradlew test`
 
 
 ## Rules

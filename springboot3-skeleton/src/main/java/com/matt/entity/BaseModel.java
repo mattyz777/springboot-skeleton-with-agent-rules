@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public abstract class BaseModel {
     public BaseModel() {
-        this.createdAt = System.currentTimeMillis();
+        this.createdAt = LocalDateTime.now();
     }
 
     /**
