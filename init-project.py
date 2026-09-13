@@ -1,26 +1,21 @@
 #!/usr/bin/env python3
 """
-Scaffold a new Spring Boot 3 project and/or copy agent rules.
+Scaffold a new Spring Boot 3 project from the skeleton and add agent rules.
 
 Usage:
-    python init-project.py -i <package_name> <target_path>
-    python init-project.py -a -p <package_name> <target_path>
+    python init-project.py <package_name> <target_path>
 
-Options:
-    -i  Init a new project from skeleton template
-    -a  Copy AGENTS.md and agent-rules docs to target project
-    -p  Package name for agent rules (required with -a)
+Arguments:
+    package_name   Java package / group, e.g. com.company.orderservice
+    target_path    Full path for the new project (must not already exist)
 
-Examples:
-    # Create a new project
-    python init-project.py -i com.company.orderservice C:/code/projects/order-service
+Example:
+    python init-project.py com.company.orderservice C:/code/projects/order-service
 
-    # Add agent rules to an existing project
-    python init-project.py -a -p com.company.orderservice C:/code/projects/order-service
-
-    # Both (init then add agent rules)
-    python init-project.py -i com.company.orderservice C:/code/projects/order-service
-    python init-project.py -a -p com.company.orderservice C:/code/projects/order-service
+This single command:
+    1. Scaffolds the project from the skeleton template
+    2. Copies AGENTS.md, CLAUDE.md, and docs/agents/ into it
+    3. Rewrites package/group references to <package_name>
 """
 
 import sys
@@ -207,51 +202,34 @@ def add_agent_rules(target_path: Path, package_name: str, script_dir: Path) -> N
     print(f"\n[OK] Agent rules added to {target_path}")
 
 
+def create_project(package_name: str, target_path: Path, script_dir: Path) -> None:
+    """Scaffold the project from the skeleton, then add agent rules."""
+    init_project(package_name, target_path, script_dir)
+    add_agent_rules(target_path, package_name, script_dir)
+
+
 def print_usage():
     print("Usage:")
-    print("  python init-project.py -i <package_name> <target_path>")
-    print("  python init-project.py -a -p <package_name> <target_path>")
+    print("  python init-project.py <package_name> <target_path>")
     print()
-    print("Options:")
-    print("  -i  Init a new project from skeleton template")
-    print("  -a  Copy AGENTS.md and agent-rules docs to target project")
-    print("  -p  Package name for agent rules (required with -a)")
+    print("Arguments:")
+    print("  package_name   Java package / group, e.g. com.company.orderservice")
+    print("  target_path    Full path for the new project (must not already exist)")
     print()
-    print("Examples:")
-    print("  python init-project.py -i com.company.app C:/code/projects/my-app")
-    print("  python init-project.py -a -p com.company.app C:/code/projects/my-app")
+    print("Example:")
+    print("  python init-project.py com.company.orderservice C:/code/projects/order-service")
 
 
 def main():
-    if len(sys.argv) < 2:
+    if len(sys.argv) != 3:
         print_usage()
         sys.exit(1)
 
     script_dir = Path(__file__).resolve().parent
-    mode = sys.argv[1]
+    package_name = sys.argv[1]
+    target_path = Path(sys.argv[2]).resolve()
 
-    if mode == "-i":
-        if len(sys.argv) != 4:
-            print("Usage: python init-project.py -i <package_name> <target_path>")
-            sys.exit(1)
-        package_name = sys.argv[2]
-        target_path = Path(sys.argv[3]).resolve()
-        init_project(package_name, target_path, script_dir)
-
-    elif mode == "-a":
-        # Parse -a -p <package_name> <target_path>
-        if len(sys.argv) < 5 or sys.argv[2] != "-p":
-            print("Usage: python init-project.py -a -p <package_name> <target_path>")
-            sys.exit(1)
-        package_name = sys.argv[3]
-        target_path = Path(sys.argv[4]).resolve()
-        add_agent_rules(target_path, package_name, script_dir)
-
-    else:
-        print(f"Error: Unknown option '{mode}'")
-        print()
-        print_usage()
-        sys.exit(1)
+    create_project(package_name, target_path, script_dir)
 
 
 if __name__ == "__main__":
