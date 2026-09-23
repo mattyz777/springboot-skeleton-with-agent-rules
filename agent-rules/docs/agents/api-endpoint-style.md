@@ -116,55 +116,14 @@ Bad:
 GET /users?id=123
 ```
 
-## Query parameters
-
-Use query parameters for simple:
-
-* filtering
-* sorting
-* pagination
-
-For complex queries, use POST search endpoints.
-
-Examples:
-
-Filtering:
-
-```text
-GET /users?status=ACTIVE
-GET /orders?customerId=123
-```
-
-Sorting:
-
-```text
-GET /users?sortBy=createdAt&sortOrder=DESC
-```
-
-Pagination:
-
-```text
-GET /users?page=1&pageSize=20
-```
 
 ## Complex queries
 
 - Use GET for simple resource queries.
 - Use POST with a `/search` action for complex queries that cannot be represented cleanly as query parameters.
-
-Examples:
-
-### Simple query:
-
-```text
-GET /users?status=ACTIVE&page=1&pageSize=20
-GET /orders?customerId=123
-```
-
-### Complex query:
-
-- Request body contains the query criteria.
-- Do not use GET with a large number of query parameters.
+  - Request body contains the query criteria.
+  - Do not use GET with a large number of query parameters.
+  - A search MUST use POST even when it returns only a single record. Result cardinality does not change the method; the criteria still belong in the request body.
 
 Good
 ```text

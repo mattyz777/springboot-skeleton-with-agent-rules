@@ -39,6 +39,7 @@ Commands:
 | Define request/response DTOs            | docs/agents/api-models.md          | done    |
 | Add request validation                  | docs/agents/api-validation.md      | done    |
 | Add pagination to a list endpoint       | docs/agents/api-pagination.md      | done    |
+| Name a controller/service method        | docs/agents/api-method-naming.md   | done    |
 | Touch entities, mappers, queries, DDL   | docs/agents/persistence.md         | planned |
 | Call HTTP clients, Redis, Kafka         | docs/agents/integration.md         | planned |
 | Add jobs or async processing            | docs/agents/jobs-and-async.md      | planned |

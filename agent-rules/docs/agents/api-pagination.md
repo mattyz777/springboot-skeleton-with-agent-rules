@@ -23,17 +23,17 @@ POST /accounts/search
 
 ## Page numbering
 
-Pages are 1-based. First page is `currentPage = 1`.
+Pages are 1-based. First page is `current = 1`.
 MUST NOT use zero-based pages.
 
 ## Default values
 
 When pagination parameters are omitted, use:
 
-| Parameter     | Default |
-| ------------- | ------- |
-| `currentPage` | `1`    |
-| `pageSize`    | `20`   |
+| Parameter | Default |
+| --------- | ------- |
+| `current` | `1`    |
+| `size`    | `20`   |
 
 ## Page size limits
 
@@ -56,9 +56,9 @@ Package: `com.matt.dto.request`
 @Data
 @AllArgsConstructor
 public class PagingRequest<T> {
-    private Integer currentPage;
-    private Integer pageSize;
-    private T requestBody;
+    private Integer current;
+    private Integer size;
+    private T data;
 }
 ```
 
@@ -66,7 +66,7 @@ The generic type `T` is the query criteria DTO (e.g. `AccountQueryRequest`).
 
 ### POST search endpoints
 
-Wrap the query DTO inside `requestBody`.
+Wrap the query DTO inside `data`.
 
 Controller signature:
 
@@ -80,24 +80,14 @@ Request body:
 
 ```json
 {
-  "currentPage": 1,
-  "pageSize": 20,
-  "requestBody": {
+  "current": 1,
+  "size": 20,
+  "data": {
     "status": "ACTIVE",
     "keyword": "test"
   }
 }
 ```
-
-### GET collection endpoints
-
-For simple GET collections, accept `currentPage` and `pageSize` as query parameters directly.
-
-```text
-GET /accounts?currentPage=1&pageSize=20
-```
-
-Do NOT use `PagingRequest<T>` for GET endpoints.
 
 ## PagingResponse
 
@@ -108,10 +98,10 @@ Package: `com.matt.dto.response`
 @Data
 public class PagingResponse<T> {
     /** current page index (1-based) */
-    private Integer currentPage;
+    private Integer current;
 
     /** record count per page */
-    private Integer pageSize;
+    private Integer size;
 
     /** total matching records */
     private Long total;
@@ -145,8 +135,8 @@ ResponseDTO<PagingResponse<AccountResponse>>
   "code": "200",
   "message": "",
   "data": {
-    "currentPage": 1,
-    "pageSize": 20,
+    "current": 1,
+    "size": 20,
     "total": 58,
     "pages": 3,
     "records": [
@@ -167,12 +157,4 @@ GET /orders/{id}
 
 ## Sorting with pagination
 
-Sorting parameters may be combined with pagination.
-
-Simple sorting via query params:
-
-```text
-GET /accounts?currentPage=1&pageSize=20&sortBy=createdAt&sortOrder=DESC
-```
-
-Complex sorting belongs in the POST search request body.
+Sorting parameters may be combined with pagination in the POST search request body.
