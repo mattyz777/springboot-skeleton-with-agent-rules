@@ -18,6 +18,14 @@ Commands:
 - Do not invent project conventions.
 - If a routed doc has status `planned` (does not yet exist), proceed using
   only `project-structure.md` and the non-negotiable rules. Do not halt.
+- When a task comes from a spec at `docs/jira_task/<jira_task_id>/spec.md`,
+  work through the tasks in its `Tasks` section one at a time. After
+  completing each individual task, STOP: list what you did as bullet points
+  and ask the human to verify before starting the next task. Do not proceed
+  to the next task until the human confirms.
+  - Directly under the bullet list, auto-generate a commit message in
+    Conventional Commits format `type(scope): message` describing what was
+    done. Use it only after the human verifies; do not commit automatically.
 
 
 ## Non-negotiable rules
