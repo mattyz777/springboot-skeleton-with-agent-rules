@@ -25,31 +25,31 @@ public abstract class BaseModel {
      *      logic delete - 1:deleted, 0: not deleted
      *      not working in xml
      */
-    @TableField("is_deleted")
+    @TableField("is_del")
     @TableLogic
     private Integer deleted;
 
-    /**
-     * Creator ID
-     */
-    @TableField("created_by")
-    private Long createdBy;
-
-    /**
-     * Last updater ID
-     */
-    @TableField("updated_by")
-    private Long updatedBy;
+//    /**
+//     * Creator ID
+//     */
+//    @TableField("created_by")
+//    private Long createdBy;
+//
+//    /**
+//     * Last updater ID
+//     */
+//    @TableField("updated_by")
+//    private Long updatedBy;
 
     /**
      * Creation timestamp
      */
-    @TableField("created_at")
-    private LocalDateTime createdAt;
+    @TableField("create_time")
+    private LocalDateTime createTime;
 
     /**
      * Last update timestamp
      */
-    @TableField("updated_at")
-    private LocalDateTime updatedAt;
+    @TableField("update_time")
+    private LocalDateTime updatedTime;
 }

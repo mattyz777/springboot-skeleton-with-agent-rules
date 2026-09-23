@@ -10,12 +10,12 @@ public class PagingResponse<T> {
     /**
      * current page index
      */
-    private Integer currentPage;
+    private Integer current;
 
     /**
      * record number per page
      */
-    private Integer pageSize;
+    private Integer size;
 
     /**
      * total matching records
